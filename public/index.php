@@ -46,6 +46,6 @@ $app->get('/books', [HomeController::class, "getAllBooks"]);
 $app->get('/books/{id}', [HomeController::class, "getOneBook"]);
 $app->get('/categories', [HomeController::class, "getAllcategories"]);
 
-$app->get('/cart/{localStorageData}', [CartController::class, "getCartWithLocalStorage"]);
+$app->get('/cart/[{localStorageData}]', [CartController::class, "getCartWithLocalStorage"]);
 
 $app->run();
