@@ -4,16 +4,10 @@ use DI\Container;
 use Dotenv\Dotenv;
 use Slim\Factory\AppFactory;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-use Administrateur\Server\controllers\CartController;
-use Administrateur\Server\controllers\HomeController;
-
 
 require "../vendor/autoload.php";
 
 // Chargement des variables d'environement dotenv
-
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
@@ -31,21 +25,11 @@ $container->set("pdo", function (ContainerInterface $container) {
     );
 });
 
-$app->add(
-    function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
-        $response = $handler->handle($request);
-        return $response
-            ->withHeader("Access-Control-Allow-Origin", "*")
-            ->withHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-            ->withHeader("Access-Control-Allow-Headers", "Content-Type, Accept,  Origin, Authorization");
-    }
-);
+// Middlewares app
+require("../src/middlewares/Headers.php");
 
-$app->get('/home', [HomeController::class, "home"]);
-$app->get('/books', [HomeController::class, "getAllBooks"]);
-$app->get('/books/{id}', [HomeController::class, "getOneBook"]);
-$app->get('/categories', [HomeController::class, "getAllcategories"]);
-
-$app->get('/cart/[{localStorageData}]', [CartController::class, "getCartWithLocalStorage"]);
+//
+require("../src/routes/Home.php");
+require("../src/routes/Cart.php");
 
 $app->run();
