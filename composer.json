@@ -1,0 +1,14 @@
+{
+    "name": "administrateur/server",
+    "autoload": {
+        "psr-4": {
+            "Administrateur\\Server\\": "src/"
+        }
+    },
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6",
+        "vlucas/phpdotenv": "^5.5",
+        "php-di/php-di": "^7.0"
+    }
+}
