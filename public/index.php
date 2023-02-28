@@ -28,8 +28,9 @@ $container->set("pdo", function (ContainerInterface $container) {
 // Middlewares app
 require("../src/middlewares/Headers.php");
 
-//
+// Routes
 require("../src/routes/Home.php");
 require("../src/routes/Cart.php");
+require("../src/routes/User.php");
 
 $app->run();
