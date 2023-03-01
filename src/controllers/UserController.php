@@ -2,9 +2,10 @@
 
 namespace Administrateur\Server\controllers;
 
-use Administrateur\Server\controllers\AbstractController;
+use Firebase\JWT\JWT;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Administrateur\Server\controllers\AbstractController;
 
 class UserController extends AbstractController
 {
@@ -12,6 +13,7 @@ class UserController extends AbstractController
     {
         // Récupération des données et hashage du mot de passe
         $data = $request->getParsedBody();
+
         $data["password"] = password_hash($data["password"], PASSWORD_DEFAULT);
 
         $pdo = $this->container->get("pdo");
@@ -21,12 +23,22 @@ class UserController extends AbstractController
         $statement = $pdo->prepare($sql);
         $statement->execute($data);
 
+        // Génération du token JWT
+        $token = JWT::encode(
+            [
+                "iat" => time(),
+                "exp" => time() * 60 * 5,
+                "user" => $data
+            ],
+            $_ENV["JWTKEY"],
+            "HS256"
+        );
+
+        // Gestion de la réponse
         $response->getBody()->write(json_encode([
             "success" => true,
-            "user" => $data
+            "user" => $token
         ]));
-
-
 
         return $response->withHeader("Content-Type", "Application/json");
     }
